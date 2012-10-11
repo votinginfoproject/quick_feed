@@ -5,7 +5,7 @@ import psycopg2
 #for string formatting, "xs:" changes to "xml_" because ":" within format
 #interprets the format statement as a range
 STATE = "MI"
-TYPE_CONVERSIONS = {"id":"SERIAL PRIMARY KEY", "xml_string":"VARCHAR(1024)",
+TYPE_CONVERSIONS = {"id":"BIGSERIAL PRIMARY KEY", "xml_string":"VARCHAR(1024)",
 			"xml_integer":"BIGINT", "xml_dateTime":"TIMESTAMP", 
 			"timestamp": "TIMESTAMP", "xml_date":"DATE",
 			"int": "INTEGER", "boolean": "BOOLEAN",

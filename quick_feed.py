@@ -13,8 +13,8 @@ import zipfile
 from shutil import make_archive
 
 #SCHEMA_URL = "https://github.com/votinginfoproject/vip-specification/raw/master/vip_spec_v3.0.xsd"
-loc_dict = {"state":"MI",
-		"county":""}
+loc_dict = {"state":"AZ",
+		"county":"Maricopa"}
 data_type = "db_flat"#db_flat, element_flat, feed
 
 LOCATION = "vip_{state}{county}".format(**loc_dict)
@@ -29,7 +29,7 @@ SS_ERROR_HEADER = ['id','problem_element','code']
 SS_WARNING_HEADER = ['id','problem_element','code']
 SS_DUP_HEADER = ['id','duplicate_id']
 REPORT_FILE = "feed_reports/{0}_report".format(LOCATION)
-vf = False
+vf = True 
 
 def files_ename_by_extension(directory, extension):
 	f_list = {}
@@ -58,7 +58,7 @@ def get_fips(loc_dict):
 		else:
 			for row in reader:
 				if row['State'] == loc_dict['state']:
-					return row['Fips5']
+					return row['StateFips']
 			
 def write_issues(report_dir, issues, issue_header, issue_file):
 	if len(issues) == 0:
@@ -88,13 +88,13 @@ fips = get_fips(loc_dict)
 db_type = "postgres"
 host = "localhost"
 db_name = LOCATION
-username = "<user_name>"
-password = "<password>"
+username = "<user>"
+password = "<pw>"
 conn = psycopg2.connect(host=host, database=db_name, user=username, password=password)
 
 create_db.clear_setup_db(LOCATION, conn)
 
-db = EasySQL("localhost",LOCATION,"jensen","gamet1me")
+db = EasySQL(host, LOCATION, username, password)
 
 process_dir = TMP_DIR + DATA_DIR
 dt.clear_or_create(process_dir)

@@ -170,10 +170,10 @@ def ss_validation(conn, sp, vf):
 			else:
 				warnings.append({'id':row['id1'],'problem_element':row['id2'],'code':'segment_overlap_precinct_match'})
 	else:
-		cursor.execute("SELECT id FROM street_segment WHERE odd_even_both = 'odd' AND mod(start_house_number,2)")
+		cursor.execute("SELECT id FROM street_segment WHERE odd_even_both = 'odd' AND mod(start_house_number,2) = 0")
 		for row in cursor.fetchall():
 			warnings.append({'id':row['id'],'problem_element':'odd_even_both','code':'unmatching_oebnumber'})
-		cursor.execute("SELECT id FROM street_segment WHERE odd_even_both = 'even' AND mod(start_house_number,1)")
+		cursor.execute("SELECT id FROM street_segment WHERE odd_even_both = 'even' AND mod(start_house_number,1) = 0")
 		for row in cursor.fetchall():
 			warnings.append({'id':row['id'],'problem_element':'odd_even_both','code':'unmatching_oebnumber'})
 		cursor.execute("SELECT s1.id AS id1, s1.start_house_number AS start1, s1.precinct_id AS precinct1, s2.id AS id2, s2.start_house_number AS start2, s2.precinct_id AS precinct2 FROM street_segment s1, street_segment s2 WHERE s1.id != s2.id AND s1.start_house_number = s2.start_house_number AND s1.non_house_address_street_direction IS NOT DISTINCT FROM s2.non_house_address_street_direction AND s1.non_house_address_street_suffix IS NOT DISTINCT FROM s2.non_house_address_street_suffix AND s1.non_house_address_street_name = s2.non_house_address_street_name AND s1.non_house_address_city = s2.non_house_address_city AND s1.non_house_address_zip = s2.non_house_address_zip")

@@ -1,5 +1,5 @@
 class Schema(object):
-	E_ORDER = ['source', 'state', 'election', 
+	E_ORDER = ['state', 'election', 
 			'locality', 'precinct', 'precinct_split', 
 			'election_administration', 'election_official', 
 			'polling_location', 'early_vote_site', 'contest', 
