@@ -13,6 +13,30 @@ URL_REGEX = re.compile("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-
 PHONE_REGEX = re.compile("1?\s*\W?\s*([2-9][0-8][0-9])\s*\W?\s*([2-9][0-9]{2})\s*\W?\s*([0-9]{4})(\se?x?t?(\d*))?")
 VALID_DIRECTIONS = ['n','s','e','w','nw','ne','sw','se','north','south','east','west','northeast','northwest','southeast','southwest']
 
+SQL_STREET_SEG_DUP = """
+SELECT
+	s1.id AS id1,
+	s1.start_house_number AS start1,
+	s1.end_house_number AS end1,
+	s1.precinct_id AS precinct1,
+	s2.id AS id2,
+	s2.start_house_number AS start2,
+	s2.end_house_number AS end2,
+	s2.precinct_id AS precinct2
+FROM
+	street_segment s1, street_segment s2
+WHERE
+	s1.id != s2.id AND
+	s1.start_house_number BETWEEN s2.start_house_number AND s2.end_house_number AND
+	s1.odd_even_both = s2.odd_even_both AND
+	s1.non_house_address_street_direction IS NOT DISTINCT FROM s2.non_house_address_street_direction AND
+	s1.non_house_address_street_suffix IS NOT DISTINCT FROM s2.non_house_address_street_suffix AND
+	s1.non_house_address_address_direction IS NOT DISTINCT FROM s2.non_house_address_address_direction AND
+	s1.non_house_address_street_name = s2.non_house_address_street_name AND
+	s1.non_house_address_city = s2.non_house_address_city AND
+	s1.non_house_address_zip = s2.non_house_address_zip
+"""
+
 def file_validation(data_dir, process_dir, valid_files, sp):
 	
 	feed_ids = set([])
@@ -161,7 +185,9 @@ def ss_validation(conn, sp, vf):
 		cursor.execute("SELECT id FROM street_segment WHERE odd_even_both = 'even' AND (mod(start_house_number,1) = 0 OR mod(end_house_number,1) = 0)")
 		for row in cursor.fetchall():
 			warnings.append({'id':row['id'],'problem_element':'odd_even_both','code':'unmatching_oebnumber'})
-		cursor.execute("SELECT s1.id AS id1, s1.start_house_number AS start1, s1.end_house_number AS end1, s1.precinct_id AS precinct1, s2.id AS id2, s2.start_house_number AS start2, s2.end_house_number AS end2, s2.precinct_id AS precinct2 FROM street_segment s1, street_segment s2 WHERE s1.id != s2.id AND s1.start_house_number BETWEEN s2.start_house_number AND s2.end_house_number AND s1.odd_even_both = s2.odd_even_both AND s1.non_house_address_street_direction IS NOT DISTINCT FROM s2.non_house_address_street_direction AND s1.non_house_address_street_suffix IS NOT DISTINCT FROM s2.non_house_address_street_suffix AND s1.non_house_address_street_name = s2.non_house_address_street_name AND s1.non_house_address_city = s2.non_house_address_city AND s1.non_house_address_zip = s2.non_house_address_zip")
+
+		cursor.execute(SQL_STREET_SEG_DUP)
+
 		for row in cursor.fetchall():
 			if row['precinct1'] != row['precinct2']:
 				errors.append({'id':row['id1'],'problem_element':row['id2'],'code':'segment_overlap_precinct_mismatch'})
