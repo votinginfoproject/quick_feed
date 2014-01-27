@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -- coding: utf-8 --
 from lxml import etree
+from os import path
 import psycopg2
 from psycopg2 import extras
 from schemaprops import SchemaProps
@@ -50,9 +51,15 @@ def create_source(row):
 	return base
 
 def create_feed(conn, sp, feed_dir, fips):
-
 	cursor = conn.cursor(cursor_factory=extras.RealDictCursor)
-	feed_file = feed_dir + Output.XML_FILE.format(fips)
+
+        ## Mega hack for now until I have time to come up with a
+        ## permanent fix
+        cursor.execute("SELECT date FROM election")
+        row = cursor.fetchone()
+        election_date = row['date']
+        feed_file = path.join(feed_dir, Output.XML_FILE.format(fips, election_date))
+
 	with open(feed_file, "w") as w:
 		w.write(Output.HEADER + "\n")
 		cursor.execute("SELECT * FROM source")

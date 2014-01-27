@@ -4,14 +4,13 @@ import psycopg2
 
 #for string formatting, "xs:" changes to "xml_" because ":" within format
 #interprets the format statement as a range
-STATE = "MI"
 TYPE_CONVERSIONS = {"id":"BIGSERIAL PRIMARY KEY", "xml_string":"VARCHAR(1024)",
 			"xml_integer":"BIGINT", "xml_dateTime":"TIMESTAMP", 
 			"timestamp": "TIMESTAMP", "xml_date":"DATE",
 			"int": "INTEGER", "boolean": "BOOLEAN",
 			"date_created": "DEFAULT CURRENT_TIMESTAMP",
 			"date_modified": "DEFAULT CURRENT_TIMESTAMP"}
-SCHEMA_URL = "https://github.com/votinginfoproject/vip-specification/raw/master/vip_spec_v3.0.xsd"
+SCHEMA_URL = "http://votinginfoproject.github.io/vip-specification/vip_spec_v3.0.xsd"
 
 def create_enum(simple, simple_elements, cursor, connection):
 
@@ -73,11 +72,9 @@ def create_table(name, elements, cursor, connection, complex_types, simple_types
 	cursor.execute(create_statement)		
 	connection.commit()
 
-def clear_setup_db(location, conn):
+def clear_setup_db(location, conn, schema=Schema(SCHEMA_URL)):
 
 	cursor = conn.cursor()
-
-	schema = Schema('../demo_data/vip_spec_v3.0.xsd')
 
 	complex_types = schema.get_complexTypes()
 	simple_types = schema.get_simpleTypes()

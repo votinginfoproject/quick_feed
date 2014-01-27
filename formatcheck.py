@@ -32,7 +32,7 @@ def invalid_config_sections(directory, config_file, section_props):
 def invalid_files(directory, file_list, file_props):
 	invalid_files = []
  	for k, v in file_list.iteritems():
-		with open(directory + k) as f:
+		with open(path.join(directory, k)) as f:
 			try:
 				fdata = csv.DictReader(f)
 			except:

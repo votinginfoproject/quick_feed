@@ -61,7 +61,7 @@ class EasySQL:
 			self.cursor.execute(query)
 			self.conn.commit()
 	
-	def copy_upload(self, table, vals ,file_name):
+	def copy_upload(self, table, vals, file_name):
 		query = "COPY {0}({1}) FROM '{2}' WITH CSV HEADER".format(table, ",".join(vals), file_name)
 		self.cursor.copy_expert(query, sys.stdin)
 		self.conn.commit()

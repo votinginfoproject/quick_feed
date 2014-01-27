@@ -1,4 +1,5 @@
 import csv
+from os import path
 from schemaprops import SchemaProps
 from shutil import copy
 import re
@@ -46,7 +47,7 @@ def file_validation(data_dir, process_dir, valid_files, sp):
 
 	for f in valid_files:
 		element_name, extension = f.lower().split(".")
-		with open(data_dir + f, "r") as reader, open(process_dir + f, "w") as writer:
+		with open(path.join(data_dir, f), "r") as reader, open(path.join(process_dir, f), "w") as writer:
 			r = csv.DictReader(reader)
 			w = csv.DictWriter(writer, fieldnames=[fn.lower() for fn in r.fieldnames])
 			w.writeheader()
