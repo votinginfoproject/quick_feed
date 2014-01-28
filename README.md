@@ -58,7 +58,7 @@ At this point, as long as the other dependencies are set up correctly, quick_fee
                             the VIP CSV data file type (NB: only current supported
                             type is "db_flat")
       --voterfile           flag to validate the data with the assumption it's
-			    from a voterfile
+                            from a voterfile
       --dbname DATABASE     the database name
       --dbuser USERNAME     username to connect to the database
       --dbpass PASSWORD     password to connect to the database
