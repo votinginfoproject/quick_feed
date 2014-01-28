@@ -49,14 +49,14 @@ At this point, as long as the other dependencies are set up correctly, quick_fee
     optional arguments:
       -h, --help            show this help message and exit
       --report-dir REPORT_DIR
-			    the output directory for reports
+                            the output directory for reports
       --feed-dir FEED_DIR   the output directory for the feed
       --tmp-dir TMP_DIR     a temp directory for parsing
       --state STATE         the abbreviation of the state
       --county COUNTY       the full name of the county
       --data-type {db_flat,element_flat,feed}
-			    the VIP CSV data file type (NB: only current supported
-			    type is "db_flat")
+                            the VIP CSV data file type (NB: only current supported
+                            type is "db_flat")
       --voterfile           flag to validate the data with the assumption it's
 			    from a voterfile
       --dbname DATABASE     the database name
