@@ -99,11 +99,11 @@ def get_fips(loc_dict):
 def write_issues(report_dir, issues, issue_header, issue_file):
     if len(issues) == 0:
 	return
-	with open(path.join(report_dir, issue_file), "w") as w:
-	    writer = DictWriter(w, fieldnames=issue_header)
-	    writer.writeheader()
-	    for issue in issues:
-		writer.writerow(issue)
+    with open(path.join(report_dir, issue_file), "w") as w:
+        writer = DictWriter(w, fieldnames=issue_header)
+        writer.writeheader()
+        for issue in issues:
+            writer.writerow(issue)
 
 def write_report(report_dir, counts, file_issues, issue_counts, loc_dict, fname):
     with open(path.join(report_dir, fname), "w") as w:
