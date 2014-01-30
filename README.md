@@ -63,3 +63,18 @@ At this point, as long as the other dependencies are set up correctly, quick_fee
       --dbuser USERNAME     username to connect to the database
       --dbpass PASSWORD     password to connect to the database
       --schema SCHEMA_URL   the url to a VIP schema version
+
+## Running ##
+A successful run takes a while and then exits gracefully and produces have a report_summary.txt file where ever you pointed the reports directory at. If things went well, it also produces the feed wherever you pointed the feed output at. Check the reports_summary.txt for errors, and see other accompanying error files to see if anything needs to be cleaned up.
+
+However, more than likely there will be data file errors that prevent a report from being generated. See the section below for some of the typical errors. In these cases you'll most likely get a stack trace output, and have to use that as your guide to figuring out the type of error you encountered.
+
+# Kinds of Data file errors
+1. Non-ascii characters. The data somewhat frequently has non-ascii characters that kill the feed generation process. It'll give you the 0xNN character code, so then you can google the code, find the character, copy it, and then do a search for it and replace it with whatever is appropriate. Common non-ascii characters found include: curly single and double quotes and em dashes. Referenda might also include things like the Section Mark character.
+2. Files need to be named after the tables they are put into, and also need column names appropriately named as well. So far all I can suggest is find a good data set and use it as a guide, unless you want to pick apart the schema from one of the python files (feedconf.py)
+3. Invalid field inputs. Some of the schema fields are enums, and while they handily accept an empty string value, if the export has the value NULL, this will fail. I'm sure there are many other examples of this.
+4. No election. Every import needs an election to base the data off of, so if election.txt/election.csv is missing, this will fail with an obscure error that points to a line in the file trying to read the date from a database cursor/result set.
+5. More than one election. Also, there should only be a single election in the feed building stage. Fun!
+6. Non-data files in data directory. The import is very fragile, and expects all the files in the directory to be part of the import and fails if some are not.
+
+
