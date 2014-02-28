@@ -63,6 +63,77 @@ At this point, as long as the other dependencies are set up correctly, quick_fee
       --dbuser USERNAME     username to connect to the database
       --dbpass PASSWORD     password to connect to the database
       --schema SCHEMA_URL   the url to a VIP schema version
+      
+## Installation on a PC with a VM ##
+Install VirtualBox to add a virtual machine to your Windows computer, choosing Ubuntu as the OS [here](http://www.oracle.com/technetwork/server-storage/virtualbox/downloads/index.html#vbox)
+
+A [tutorial](http://www.psychocats.net/ubuntu/virtualbox)
+
+Read [this settings article](http://blog.jdpfu.com/2012/09/14/solution-for-slow-ubuntu-in-virtualbox) to choose your settings while you create and set up your VM
+
+Be sure to select the option to have a shared clipboard - this will make things easier when you try to copy and paste commands or errors between machines.
+
+Install the [Linux Guest Additions](https://forums.virtualbox.org/viewtopic.php?t=15679)
+
+Set up three shared folders, to be shared between your Windows and VM. One for feeds, one for reports, and one for data.
+Instructions on setting up shared folders [here](https://forums.virtualbox.org/viewtopic.php?t=15868)
+
+You do not need to install PostgreSQL or Python, because they should both be included in Ubuntu's default distribution.
+
+Install git
+
+	sudo apt-get install git-core
+
+Clone the repository
+
+	git clone https://github.com/votinginfoproject/quick_feed.git
+	
+Create a new database, user and password for quick_feed to use
+
+	psql postgres
+	create user -s vip with password '[choose pw]'
+	createdb quickfeed owner vip
+	
+Install easy_install
+
+	sudo apt-get update
+	sudo apt-get install python-setuptools python-dev build-essential git-core -y
+	
+Install pip
+
+	sudo easy_install pip
+	
+Install virtualenv
+
+	sudo pip install virtualenv 
+	
+Create a directory for your virtual environment
+
+	mkdir ~/virtualenvs
+	
+Create a virtualenv
+
+	virtualenv --no-site-packages ~/virtualenvs/quickfeed
+	
+Load your virtualenv
+
+	source ~/envs/quickfeed/bin/activate
+	
+Install the requirements
+
+	pip install -r requiremenents.txt
+	
+You are now ready to use quick_feed at the command line, as shown above. Every time you want to begin using quick_feed, you should do the following:
+
+	1. Mount the three shared folders: 
+		sudo mount.vboxsf [shared data folder name] ~/data
+		sudo mount.vboxsf [shared feeds folder name] ~/feeds
+		sudo mount.vboxsf [shared reports folder name] ~/reports
+	2. Load the virtualenv: source ~/envs/quickfeed/bin/activate
+	3. cd to the directory: cd ~/quick_feed
+	
+When you are finished running quick_feeds, type: deactivate 
+Your virtualenv will be shut down
 
 ## Running ##
 A successful run takes a while and then exits gracefully and produces have a report_summary.txt file where ever you pointed the reports directory at. If things went well, it also produces the feed wherever you pointed the feed output at. Check the reports_summary.txt for errors, and see other accompanying error files to see if anything needs to be cleaned up.
@@ -76,5 +147,6 @@ However, more than likely there will be data file errors that prevent a report f
 4. No election. Every import needs an election to base the data off of, so if election.txt/election.csv is missing, this will fail with an obscure error that points to a line in the file trying to read the date from a database cursor/result set.
 5. More than one election. Also, there should only be a single election in the feed building stage. Fun!
 6. Non-data files in data directory. The import is very fragile, and expects all the files in the directory to be part of the import and fails if some are not.
+
 
 
