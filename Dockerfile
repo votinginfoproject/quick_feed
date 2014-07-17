@@ -21,4 +21,4 @@ RUN pip install -r requirements.txt
 VOLUME ["/data", "/reports", "/feeds"]
 ADD ./ /quick_feed/
 
-ENTRYPOINT ["/quick_feed/run_quick_feed", "--report-dir", "/reports", "--feed-dir", "/feeds", "--dbname", "vip", "--dbuser", "vip", "--dbpass", "vip", "/data"]
+ENTRYPOINT ["/quick_feed/run_quick_feed", "--data-type", "db_flat", "--report-dir", "/reports", "--feed-dir", "/feeds", "--dbname", "vip", "--dbuser", "vip", "--dbpass", "vip", "/data"]

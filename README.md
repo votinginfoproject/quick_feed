@@ -11,6 +11,12 @@ Quick Feed requires the following components to be installed, first:
 
 To follow the installation instructions below, [homebrew](http://brew.sh/) is also needed.
 
+## Usage ##
+The simplest way to use this is via Docker. If you can't / won't use Docker, see the next section for full installation instructions.
+
+1. `docker build -t quick_feed .`
+1. `docker run -v /your/data/dir:/data -v /your/feed/output/dir:/feeds -v /your/error/reports/dir:/reports quick_feed --state co`
+
 ## Installation ##
 _The following instructions assume installation on a Mac._
 
