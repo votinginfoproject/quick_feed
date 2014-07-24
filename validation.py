@@ -39,7 +39,7 @@ WHERE
 """
 
 def file_validation(data_dir, process_dir, valid_files, sp):
-	
+
 	feed_ids = set([])
 	error_data = []
 	warning_data = []
@@ -51,49 +51,52 @@ def file_validation(data_dir, process_dir, valid_files, sp):
 			r = csv.DictReader(reader)
 			w = csv.DictWriter(writer, fieldnames=[fn.lower() for fn in r.fieldnames])
 			w.writeheader()
-			
+
 			dict_fields = sp.header("db", element_name)
 			type_vals = sp.type_data("db", element_name)
-			
+
 			row_count = 0
-			
+
 			for row in r:
 				type_error = False
 				row_count += 1
-				row = dict((k.lower(), v.strip()) for k,v in row.iteritems())
-				for k in row:
-					report = validate(k, type_vals[k]["type"], row, type_vals[k]["is_required"])
-					if report is not None:
-						report["base_element"] = element_name
-						report["problem_element"] = k 
-						if "id" in row:
-							report["id"] = row["id"]
+				if any(not k for k,v in row.iteritems()):
+					print f + " - line has too many fields: " + str(row_count + 1)
+				else:
+					row = dict((k.lower(), v.strip()) for k,v in row.iteritems())
+					for k in row:
+						report = validate(k, type_vals[k]["type"], row, type_vals[k]["is_required"])
+						if report is not None:
+							report["base_element"] = element_name
+							report["problem_element"] = k
+							if "id" in row:
+								report["id"] = row["id"]
+							else:
+								report["id"] = "xxx"
+							if report["type"] == "error":
+								error_data.append(report)
+								if report["code"] == "type_error":
+									type_error = True
+							else:
+								warning_data.append(report)
+					if "id" in row:
+						if element_name == "source":
+							row["id"] = 1
+						#elif element_name == "election":
+						#	row["id"] = 4000
+						if row["id"] not in feed_ids:
+							feed_ids.add(row["id"])
 						else:
-							report["id"] = "xxx"
-						if report["type"] == "error":
-							error_data.append(report)
-							if report["code"] == "type_error":
-								type_error = True
-						else:
-							warning_data.append(report)
-				if "id" in row:
-					if element_name == "source":
-						row["id"] = 1
-					#elif element_name == "election":
-					#	row["id"] = 4000 
-					if row["id"] not in feed_ids:
-						feed_ids.add(row["id"])
-					else:
-						error_data.append({'base_element':element_name,'type':'error','problem_element':'id','id':row["id"],'code':'duplicate_ids'})
-						continue
-				if not type_error:
-					w.writerow(row)
+							error_data.append({'base_element':element_name,'type':'error','problem_element':'id','id':row["id"],'code':'duplicate_ids'})
+							continue
+					if not type_error:
+						w.writerow(row)
 			element_counts[element_name] = str(row_count)
 	return element_counts, error_data, warning_data
 
 def validate(key, xml_type, row, required):
 
-	if len(row[key]) <= 0 or row[key].lower() in ["none","n/a","-","na"]: 
+	if len(row[key]) <= 0 or row[key].lower() in ["none","n/a","-","na"]:
 		if required == "true":
 			return {"type":"error", "code":"missing_required"}
 	elif xml_type == "xs:integer":
@@ -143,19 +146,19 @@ def validate(key, xml_type, row, required):
 	return None
 
 def db_validation(conn, sp):
-	
+
 	cursor = conn.cursor(cursor_factory=extras.RealDictCursor)
 	table_columns = sp.full_header_data("db")
 	base_tables = sp.key_list("element")
 	tables = table_columns.keys()
 	duplicates = []
 	errors = []
-	
+
 	for t in tables:
 		if t == "street_segment" or t.endswith("result"):
 			continue
 		join_comparisons = {}
-		query = "SELECT t1.id as id, t2.id as duplicate_id FROM {0} t1, {0} t2 WHERE ".format(t) 
+		query = "SELECT t1.id as id, t2.id as duplicate_id FROM {0} t1, {0} t2 WHERE ".format(t)
 		query += ' AND '.join(['t1.{0}=t2.{0}'.format(c) for c in table_columns[t] if c != "id"])
 		query += ' AND t1.id != t2.id'
 		cursor.execute(query)
@@ -170,12 +173,12 @@ def db_validation(conn, sp):
 	return duplicates, errors
 
 def ss_validation(conn, sp, vf):
-	
+
 	cursor = conn.cursor(cursor_factory=extras.RealDictCursor)
 	errors = []
 	warnings = []
 	duplicates = []
-	
+
 	if not vf:
 		cursor.execute("SELECT id from street_segment WHERE start_house_number > end_house_number")
 		for row in cursor.fetchall():

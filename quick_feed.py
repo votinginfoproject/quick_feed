@@ -95,7 +95,7 @@ def get_fips(loc_dict):
             for row in reader:
                 if row['State'].lower() == loc_dict['state'].lower():
                     return row['StateFips']
-			    
+
 def write_issues(report_dir, issues, issue_header, issue_file):
     if len(issues) == 0:
 	return
@@ -121,7 +121,7 @@ def write_report(report_dir, counts, file_issues, issue_counts, loc_dict, fname)
 
         for k,v in issue_counts.iteritems():
             w.write("{0}: {1}\n".format(k,v))
-		
+
 fips = get_fips(loc_dict)
 
 #db settings

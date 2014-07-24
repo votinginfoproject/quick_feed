@@ -3,7 +3,7 @@ from os import path
 from ConfigParser import ConfigParser
 
 def invalid_config_sections(directory, config_file, section_props):
-	
+
 	config = ConfigParser()
 	config.read(config_file)
 	sections = config.sections()
@@ -31,13 +31,26 @@ def invalid_config_sections(directory, config_file, section_props):
 
 def invalid_files(directory, file_list, file_props):
 	invalid_files = []
+	print "Checking for invalid filenames and invalid fieldnames"
  	for k, v in file_list.iteritems():
-		with open(path.join(directory, k)) as f:
-			try:
-				fdata = csv.DictReader(f)
-			except:
-				invalid_files.append(f)
-				continue
-			if any(h.lower() not in file_props[v] for h in fdata.fieldnames):
-				invalid_files.append(k)
+ 		if k.lower()[:-4] not in file_props:
+ 			print "  FAILED: " + k + " - filename does not match expected filenames"
+ 			invalid_files.append(k)
+ 		else:
+			with open(path.join(directory, k)) as f:
+				try:
+					fdata = csv.DictReader(f)
+				except:
+					print "  FAILED: " + k + " - CSV reading failed"
+					invalid_files.append(f)
+					continue
+				invalid_fields = []
+				for h in fdata.fieldnames:
+					if h.lower() not in file_props[v]:
+						invalid_fields.append(h.lower())
+				if invalid_fields:
+					print "  FAILED: " + k + " - invalid fields [" + ",".join(invalid_fields) + "]"
+					invalid_files.append(k)
+				else:
+					print "PASSED: " + k
 	return invalid_files
