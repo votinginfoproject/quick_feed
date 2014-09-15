@@ -1,8 +1,8 @@
 FROM quay.io/democracyworks/base:latest
 MAINTAINER Democracy Works, Inc. <dev@democracy.works>
 
-RUN apt-get install -y postgresql libpq-dev python python-setuptools python-dev \
-                       build-essential python-pip libxslt1-dev
+RUN apt-get update && apt-get install -y postgresql libpq-dev python \
+  python-setuptools python-dev build-essential python-pip libxslt1-dev
 
 USER postgres
 RUN /etc/init.d/postgresql start &&\
