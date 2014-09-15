@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ -e /etc/init.d/postgresql ]]; then
+  /etc/init.d/postgresql start
+fi
+
+exec python quick_feed.py $@
