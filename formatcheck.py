@@ -20,7 +20,7 @@ def invalid_config_sections(directory, config_file, section_props):
 			if any(h not in section_props[s] for h in header):
 				invalid_sections.append(s)
 				continue
-			with open(directory + config.get(s, "file_name")) as f:
+			with open(directory + config.get(s, "file_name"), "rU") as f:
 				fdata = csv.reader(f)
 				try:
 					if len(fdata.next()) != len(header):
@@ -37,7 +37,7 @@ def invalid_files(directory, file_list, file_props):
  			print "  FAILED: " + k + " - filename does not match expected filenames"
  			invalid_files.append(k)
  		else:
-			with open(path.join(directory, k)) as f:
+			with open(path.join(directory, k), "rU") as f:
 				try:
 					fdata = csv.DictReader(f)
 				except:
