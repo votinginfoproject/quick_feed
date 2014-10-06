@@ -69,9 +69,12 @@ vf = args.vf
 def files_ename_by_extension(directory, extension):
     f_list = {}
     for f in os.listdir(directory):
-	element_name, f_exten = f.lower().split(".")
-	if f_exten == extension:
-	    f_list[f] = element_name
+	try:
+            element_name, f_exten = f.lower().split(".")
+        except ValueError: # silently ignores files that don't have extensions, such as Icon files
+            continue
+        if f_exten == extension:
+            f_list[f] = element_name
     return f_list
 
 def check_db_flat(data_dir, sp):
