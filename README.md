@@ -123,7 +123,7 @@ Create a virtualenv
 	
 Load your virtualenv
 
-	source ~/envs/quickfeed/bin/activate
+	source ~/virtualenvs/quickfeed/bin/activate
 	
 Install the requirements
 
