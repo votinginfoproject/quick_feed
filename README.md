@@ -127,7 +127,7 @@ Load your virtualenv
 	
 Install the requirements
 
-	pip install -r requiremenents.txt
+	pip install -r requirements.txt
 	
 You are now ready to use quick_feed at the command line, as shown above. Every time you want to begin using quick_feed, you should do the following:
 
