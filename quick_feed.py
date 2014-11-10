@@ -177,6 +177,11 @@ issue_counts = {'errors':len(errors),
 		'street_segment_duplicates':len(ss_duplicates)}
 write_report(REPORT_DIR, counts, file_issues, issue_counts, loc_dict, "report_summary.txt")
 
+if len(errors) == 0:
+    print "yay, no errors!"
+else:
+    print "you had {0} errors, you should look at them".format(len(errors))
+
 #Validations - Need a vf vs. segment flag, so that the queries can be run accordingly (exact match vs. range check)
 feed_file = create_feed.create_feed(conn, sp, FEED_DIR, fips)
 make_archive(REPORT_FILE, "zip", REPORT_DIR)
