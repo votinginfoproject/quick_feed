@@ -105,7 +105,7 @@ class Schema(object):
 
 class Output(object):
 	VERSION = "3.0"
-	SCHEMA_URL = "https://github.com/votinginfoproject/vip-specification/blob/master/vip_spec_v{0}.xsd".format(VERSION)
+	SCHEMA_URL = "https://github.com/votinginfoproject/vip-specification/raw/v3-archive/vip_spec_v{0}.xsd".format(VERSION)
 	HEADER = '<?xml version="1.0" encoding="utf-8"?>\n<vip_object xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="{0}" schemaVersion="{1}">'.format(SCHEMA_URL, VERSION)
 	FOOTER = "</vip_object>"
 	XML_FILE = "vipFeed-{0}-{1}.xml"

@@ -39,7 +39,7 @@ parser.add_argument('--dbuser', dest='username', action='store',
                     help='username to connect to the database')
 parser.add_argument('--dbpass', dest='password', action='store',
                     help='password to connect to the database')
-parser.add_argument('--schema', dest='schema_url', default='http://votinginfoproject.github.io/vip-specification/vip_spec_v3.0.xsd', action='store',
+parser.add_argument('--schema', dest='schema_url', default='https://github.com/votinginfoproject/vip-specification/raw/v3-archive/vip_spec_v3.0.xsd', action='store',
                     help='the url to a VIP schema version')
 
 args = parser.parse_args()
